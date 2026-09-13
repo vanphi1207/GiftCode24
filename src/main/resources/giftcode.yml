@@ -3,9 +3,10 @@
 
 # Example gift code:
 samplecode:
-  # Gift command when redeeming code.
+  # Reward commands executed in order when the code is redeemed.
   commands:
     - give %player% diamond 1
+    - give %player% emerald 2
   # Notification displayed to player when redeeming code.
   message:
     - "You have received 1 diamond!"

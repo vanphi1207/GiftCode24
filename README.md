@@ -1,6 +1,6 @@
 ![GitHub release (latest by date)](https://img.shields.io/github/v/release/quangdev05/GiftCode24)
 ![GitHub license](https://img.shields.io/github/license/quangdev05/GiftCode24)
-![Supported server version](https://img.shields.io/badge/Minecraft-1.19.4%20--_1.21x-green)
+![Supported server version](https://img.shields.io/badge/Minecraft-1.21.x%20--_26.x-green)
 [![Discord](https://img.shields.io/discord/1247029974154612828.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2)](https://discord.gg/4SGhHNmhE8)
 
 # GiftCode24 Plugin
@@ -11,6 +11,16 @@
 ### **Note:** The original version (GiftCode24) from version 3.0.0 has been supported for use on servers running fork Folia, so GiftCode24F (GiftCode24 Folia) will stop updating.
 
 ## Installation Instructions
+### Requirements
+- Paper or Folia server version 1.21.x through 26.x
+- Java 21 or newer (use the Java version required by your server release)
+
+### Build from source
+```bash
+./build.sh
+```
+The plugin JAR will be generated in `target/`.
+
 1. **Download and install plugins**
 - Download plugins on official platforms.
 - Drag the Plugins file into the Plugins section in the server file.
@@ -25,6 +35,9 @@
 - `/gc create <base> -r [amount]`: Generate random codes (default 10)
 - `/gc create <base> -r [amount] -c <template>`: Random codes using <template>'s
 - `/gc guie <code>`: Open item GUI editor for a code
+- `/gc addcmd <code> <command>`: Add another reward command to a gift code
+- `/gc delcmd <code> <number|all>`: Remove one or all reward commands
+- `/gc listcmd <code>`: List all reward commands for a gift code
 - `/gc setperm <code> <permission|none>`: Set/clear required permission for a code
 - `/gc del <code>`: Delete gift code.
 - `/gc reload`: Reload the Plugin.

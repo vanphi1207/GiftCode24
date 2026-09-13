@@ -86,6 +86,30 @@ public class GiftCodeManager {
         save();
     }
 
+    public boolean addRewardCommand(String code, String command) {
+        GiftCode gc = giftCodes.get(code);
+        if (gc == null || command == null || command.isBlank()) return false;
+        gc.getCommands().add(command);
+        save();
+        return true;
+    }
+
+    public boolean removeRewardCommand(String code, int index) {
+        GiftCode gc = giftCodes.get(code);
+        if (gc == null || index < 0 || index >= gc.getCommands().size()) return false;
+        gc.getCommands().remove(index);
+        save();
+        return true;
+    }
+
+    public boolean clearRewardCommands(String code) {
+        GiftCode gc = giftCodes.get(code);
+        if (gc == null) return false;
+        gc.getCommands().clear();
+        save();
+        return true;
+    }
+
     public void deleteGiftCode(String code) {
         giftCodes.remove(code);
         save();

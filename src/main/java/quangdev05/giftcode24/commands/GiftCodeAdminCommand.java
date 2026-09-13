@@ -38,6 +38,9 @@ public class GiftCodeAdminCommand implements CommandExecutor, TabCompleter {
             sender.sendMessage(ChatColor.GREEN + " /gc create <base> -r [amount] - Generate random codes (default 10)");
             sender.sendMessage(ChatColor.GREEN + " /gc create <base> -r [amount] -c <template> - Random codes using <template>'s");
             sender.sendMessage(ChatColor.GREEN + " /gc guie <code> - Open item GUI editor for a code");
+            sender.sendMessage(ChatColor.GREEN + " /gc addcmd <code> <command> - Add a reward command");
+            sender.sendMessage(ChatColor.GREEN + " /gc delcmd <code> <number|all> - Remove reward commands");
+            sender.sendMessage(ChatColor.GREEN + " /gc listcmd <code> - List reward commands");
             sender.sendMessage(ChatColor.GREEN + " /gc setperm <code> <permission|none> - Set/clear required permission for a code");
             sender.sendMessage(ChatColor.GREEN + " /gc del <code> - Delete a gift code");
             sender.sendMessage(ChatColor.GREEN + " /gc reload - Reload the plugin");
@@ -175,6 +178,84 @@ public class GiftCodeAdminCommand implements CommandExecutor, TabCompleter {
             }
             break;
 
+            case "addcmd": {
+                if (args.length < 3) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /giftcode addcmd <code> <command>");
+                    break;
+                }
+                String code = args[1];
+                if (!manager.exists(code)) {
+                    sender.sendMessage(ChatColor.RED + "The gift code \"" + ChatColor.YELLOW + code + ChatColor.RED + "\" does not exist.");
+                    break;
+                }
+                String rewardCommand = String.join(" ", Arrays.copyOfRange(args, 2, args.length));
+                if (rewardCommand.startsWith("/")) rewardCommand = rewardCommand.substring(1);
+                if (!manager.addRewardCommand(code, rewardCommand)) {
+                    sender.sendMessage(ChatColor.RED + "Reward command cannot be empty.");
+                    break;
+                }
+                sender.sendMessage(ChatColor.GREEN + "Added reward command #" + manager.get(code).getCommands().size()
+                        + " to " + ChatColor.YELLOW + code + ChatColor.GREEN + ": "
+                        + ChatColor.AQUA + rewardCommand);
+                break;
+            }
+
+            case "delcmd": {
+                if (args.length != 3) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /giftcode delcmd <code> <number|all>");
+                    break;
+                }
+                String code = args[1];
+                GiftCode giftCode = manager.get(code);
+                if (giftCode == null) {
+                    sender.sendMessage(ChatColor.RED + "The gift code \"" + ChatColor.YELLOW + code + ChatColor.RED + "\" does not exist.");
+                    break;
+                }
+                if ("all".equalsIgnoreCase(args[2])) {
+                    int removed = giftCode.getCommands().size();
+                    manager.clearRewardCommands(code);
+                    sender.sendMessage(ChatColor.GREEN + "Removed " + removed + " reward command(s) from "
+                            + ChatColor.YELLOW + code + ChatColor.GREEN + ".");
+                    break;
+                }
+                try {
+                    int commandNumber = Integer.parseInt(args[2]);
+                    if (!manager.removeRewardCommand(code, commandNumber - 1)) {
+                        sender.sendMessage(ChatColor.RED + "Command number must be between 1 and "
+                                + giftCode.getCommands().size() + ".");
+                        break;
+                    }
+                    sender.sendMessage(ChatColor.GREEN + "Removed reward command #" + commandNumber + " from "
+                            + ChatColor.YELLOW + code + ChatColor.GREEN + ".");
+                } catch (NumberFormatException e) {
+                    sender.sendMessage(ChatColor.RED + "Use a command number or \"all\".");
+                }
+                break;
+            }
+
+            case "listcmd": {
+                if (args.length != 2) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /giftcode listcmd <code>");
+                    break;
+                }
+                GiftCode giftCode = manager.get(args[1]);
+                if (giftCode == null) {
+                    sender.sendMessage(ChatColor.RED + "The gift code \"" + ChatColor.YELLOW + args[1] + ChatColor.RED + "\" does not exist.");
+                    break;
+                }
+                List<String> rewardCommands = giftCode.getCommands();
+                sender.sendMessage(ChatColor.GOLD + "Reward commands for " + ChatColor.YELLOW + args[1]
+                        + ChatColor.GOLD + " (" + rewardCommands.size() + "):");
+                if (rewardCommands.isEmpty()) {
+                    sender.sendMessage(ChatColor.GRAY + " No reward commands configured.");
+                } else {
+                    for (int i = 0; i < rewardCommands.size(); i++) {
+                        sender.sendMessage(ChatColor.YELLOW + " " + (i + 1) + ". " + ChatColor.AQUA + rewardCommands.get(i));
+                    }
+                }
+                break;
+            }
+
             case "del":
             case "delete":
                 if (args.length == 2) {
@@ -280,7 +361,8 @@ public class GiftCodeAdminCommand implements CommandExecutor, TabCompleter {
             return opts.stream().filter(s -> s.toLowerCase().startsWith(p)).collect(Collectors.toList());
         };
 
-        List<String> subs = Arrays.asList("help","create","del","reload","enable","disable","list","assign","setperm","guie");
+        List<String> subs = Arrays.asList("help","create","del","reload","enable","disable","list","assign",
+                "setperm","guie","addcmd","delcmd","listcmd");
 
         if (args.length == 1) {
             return pick.apply(subs, args[0]);
@@ -314,9 +396,26 @@ public class GiftCodeAdminCommand implements CommandExecutor, TabCompleter {
             case "del":
             case "enable":
             case "disable":
-            case "guie": {
+            case "guie":
+            case "addcmd":
+            case "listcmd": {
                 if (args.length == 2) {
                     return pick.apply(manager.listGiftCodes(), args[1]);
+                }
+                return Collections.emptyList();
+            }
+            case "delcmd": {
+                if (args.length == 2) {
+                    return pick.apply(manager.listGiftCodes(), args[1]);
+                } else if (args.length == 3) {
+                    GiftCode giftCode = manager.get(args[1]);
+                    if (giftCode == null) return Collections.emptyList();
+                    List<String> choices = new ArrayList<>();
+                    choices.add("all");
+                    for (int i = 1; i <= giftCode.getCommands().size(); i++) {
+                        choices.add(String.valueOf(i));
+                    }
+                    return pick.apply(choices, args[2]);
                 }
                 return Collections.emptyList();
             }

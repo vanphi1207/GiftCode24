@@ -34,7 +34,7 @@ public class GiftCodesYml {
         Map<String, GiftCode> map = new LinkedHashMap<>();
         for (String key : new ArrayList<>(cfg.getKeys(false))) {
             Object messageObj = cfg.get(key + ".message");
-            List<String> commands = cfg.getStringList(key + ".commands");
+            List<String> commands = loadCommands(key);
             int maxUses = cfg.getInt(key + ".max-uses");
             String expiry = cfg.getString(key + ".expiry");
             boolean enabled = cfg.getBoolean(key + ".enabled");
@@ -63,6 +63,31 @@ public class GiftCodesYml {
             map.put(key, giftCode);
         }
         return map;
+    }
+
+    private List<String> loadCommands(String key) {
+        Object commandsObj = cfg.get(key + ".commands");
+        List<String> commands = new ArrayList<>();
+
+        if (commandsObj instanceof List<?> list) {
+            for (Object command : list) {
+                if (command != null && !String.valueOf(command).isBlank()) {
+                    commands.add(String.valueOf(command));
+                }
+            }
+        } else if (commandsObj != null && !String.valueOf(commandsObj).isBlank()) {
+            commands.add(String.valueOf(commandsObj));
+        }
+
+        // Backward compatibility for older configs that used singular "command".
+        if (commands.isEmpty()) {
+            String legacyCommand = cfg.getString(key + ".command");
+            if (legacyCommand != null && !legacyCommand.isBlank()) {
+                commands.add(legacyCommand);
+            }
+        }
+
+        return commands;
     }
 
     public void saveAll(Map<String, GiftCode> map) {
