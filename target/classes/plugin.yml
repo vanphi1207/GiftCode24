@@ -1,5 +1,5 @@
 name: GiftCode24
-version: '${project.version}'
+version: '3.1.1'
 main: quangdev05.giftcode24.GiftCode24
 api-version: '1.21'
 folia-supported: true

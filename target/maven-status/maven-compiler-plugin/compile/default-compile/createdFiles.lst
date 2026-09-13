@@ -1,0 +1,13 @@
+quangdev05\giftcode24\commands\RedeemCodeCommand.class
+quangdev05\giftcode24\gui\GiftItemEditorGUI.class
+quangdev05\giftcode24\database\DatabaseManager.class
+quangdev05\giftcode24\gui\GiftCodeListGUI.class
+quangdev05\giftcode24\database\DatabaseManager$DatabaseType.class
+quangdev05\giftcode24\commands\GiftCodeAdminCommand.class
+quangdev05\giftcode24\GiftCode24.class
+quangdev05\giftcode24\model\GiftCode.class
+quangdev05\giftcode24\database\PlayerDataRepository$PlayerData.class
+quangdev05\giftcode24\database\PlayerDataRepository.class
+quangdev05\giftcode24\manager\GiftCodeManager.class
+quangdev05\giftcode24\update\UpdateChecker.class
+quangdev05\giftcode24\storage\GiftCodesYml.class

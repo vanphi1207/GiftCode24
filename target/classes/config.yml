@@ -1,0 +1,36 @@
+#  ██████╗ ██╗███████╗████████╗ ██████╗ ██████╗ ██████╗ ███████╗██████╗ ██╗  ██╗
+# ██╔════╝ ██║██╔════╝╚══██╔══╝██╔════╝██╔═══██╗██╔══██╗██╔════╝╚════██╗██║  ██║
+# ██║  ███╗██║█████╗     ██║   ██║     ██║   ██║██║  ██║█████╗   █████╔╝███████║
+# ██║   ██║██║██╔══╝     ██║   ██║     ██║   ██║██║  ██║██╔══╝  ██╔═══╝ ╚════██║
+# ╚██████╔╝██║██║        ██║   ╚██████╗╚██████╔╝██████╔╝███████╗███████╗     ██║
+#  ╚═════╝ ╚═╝╚═╝        ╚═╝    ╚═════╝ ╚═════╝ ╚═════╝ ╚══════╝╚══════╝     ╚═╝
+# Plugin made by QuangDev05
+# Plugin made in Vietnam
+# Facebook: https://www.facebook.com/quangdev05
+# Discord: quangdev05
+# Discord Community: https://discord.gg/4SGhHNmhE8
+# Github: https://github.com/QuangDev05/
+
+# Configure update check
+check-update: true # false to disable
+
+# Database Configuration
+database:
+  type: "H2" # H2 or MYSQL
+  mysql:
+    host: "localhost"
+    port: 3306
+    database: "giftcode24"
+    username: "root"
+    password: ""
+
+messages:
+  invalid-code: "The gift code you entered is invalid."
+  code-expired: "The gift code you entered has expired."
+  max-uses-reached: "The gift code has reached its limit."
+  max-uses-perip: "This gift code has been used more times than allowed from your IP address."
+  code-disabled: "The gift code you entered is currently disabled."
+  code-redeemed: "You have successfully redeemed your gift code!"
+  code-already-redeemed: "You have entered this code more than the specified number of times."
+  not-enough-playtime: "You need to play for at least {required} minutes to use this code. You have currently played for {current} minutes."
+  no-permission-code: "You don't have permission to use this code."
